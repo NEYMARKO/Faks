@@ -4,3 +4,14 @@
     align-items: center;
     flex-direction: column;
 }
+
+.attack-content {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    width: 50%;
+}
+
+.attack-content p {
+    display: inline-block;
+}

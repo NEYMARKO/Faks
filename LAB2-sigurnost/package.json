@@ -7,12 +7,15 @@
     "start": "nodemon dist/app.js"
   },
   "nodemonConfig": {
-    "watch": ["src"],
+    "watch": [
+      "src"
+    ],
     "ext": "js,json,css"
   },
   "dependencies": {
     "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "jquery": "^3.7.1",
     "pug": "^3.0.2",
     "shx": "^0.3.4"
   },

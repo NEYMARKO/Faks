@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/css/index.css">
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script type="text/javascript" src="/js/site.js"></script>
     <title>Document</title>
 </head>
+
 <body>
     <div class="container">
-        <div class = "attack-title">
+        <div class="attack-title">
             <h1>XSS</h1>
         </div>
         <div class="upute">
@@ -17,9 +21,12 @@
             </p>
         </div>
         <div class="attack-content">
-            Uključi/Isključi obranu
-            <input type="checkbox"> 
+            <div class="action-container">
+                <p class="action"></p> obranu
+                <input type="checkbox" class="attackCheck" onclick="handleDefense()">
+            </div>
         </div>
     </div>
 </body>
+
 </html>
