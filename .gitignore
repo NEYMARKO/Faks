@@ -38,6 +38,5 @@ Thumbs.db
 dist/**/*
 dist/
 dist
-
 # ignore yarn.lock
 yarn.lock
