@@ -1,23 +1,32 @@
 var script = document.createElement('script');
 script.src = 'https://code.jquery.com/jquery-3.6.3.min.js';
 document.getElementsByTagName('head')[0].appendChild(script);
+var warningText = "Ovo je tekst koji objašnjava kako ovaj napad funkcionira. Najvjerojatnije ću imati nekakvu formu preko koje ću izvršiti napad";
+
 
 function handleDefense() {
     //console.log("IN HANDLE DEFENSE");
-    var checkBox = $('.attackCheck');
-    var action = $('.action');
+    var checkBox = $('.form-check-input');
+    var defenseStatus = $('.defence-status');
+    var instructionsParagraph = $('.instructions');
     //action.text("Uključi");
-    console.log("SHOULD HAVE CHANGED");
+    //console.log("SHOULD HAVE CHANGED");
     if (checkBox.prop('checked')) {
-        action.text("Isključi");
+        defenseStatus.text("Uključena");
+        defenseStatus.css('color', 'green');
+        instructionsParagraph.css('display', 'none');
     }
     else {
-        action.text("Uključi");
+        defenseStatus.text("Isključena");
+        instructionsParagraph.text(warningText);
+        defenseStatus.css('color', 'red');
+        instructionsParagraph.css('display', 'inline-block');
     }
 }
 $(document).ready(function () {
-    var action = $('.action');
-    action.text("Uključi");
+    var defenseStatus = $('.defense-status');
+    defenseStatus.text("Uključena");
+    defenseStatus.css('color', 'green');
     //console.log("ON LOAD");
     handleDefense();
 });
