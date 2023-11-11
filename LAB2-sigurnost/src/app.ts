@@ -15,14 +15,39 @@ app.get('/', function (req, res) {
   res.render('index');
 });
 
+function filterInput(name: string): string {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    "/": '&#x2F;',
+  };
+  const reg = /[&<>"'/]/ig;
+  return name.replace(reg, (match) => (map[match as keyof typeof map]));
+}
+
 app.route('/submit')
   .get((req, res) => {
-    const name = req.query.name || '';
-    res.type('text/html').send(`<h1>Hello, ${name}!</h1>`);
+    //console.log("BEFORE STRING FORMATING: " + req.query.name);
+    var name: string = String(req.query.name || '');
+    const shouldFilter: string = String(req.query.defenceBool);
+    if (shouldFilter === "true") {
+      name = filterInput(name);
+      console.log("Filtered name: " + name);
+    }
+    res.type('text/html').send(`<h1>Hello ${name}!</h1>`);
   })
   .post((req, res) => {
-    const name = req.body.name || '';
-    res.send(`<h1>Hello, ${name}!</h1>`);
+    var name: string = String(req.body.name || '');
+    const shouldFilter: string = String(req.body.defenceBool);
+    //console.log("DEFENCE BOOL: " + shouldFilter);
+    if (shouldFilter === "true") {
+      name = filterInput(name);
+      console.log("Filtered name: " + name);
+    }
+    res.send(`<h1>Hello ${name}!</h1>`);
   });
 
 const hostname = '127.0.0.1';
