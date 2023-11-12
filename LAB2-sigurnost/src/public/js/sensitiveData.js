@@ -2,8 +2,8 @@ var script = document.createElement('script');
 script.src = 'https://code.jquery.com/jquery-3.6.3.min.js';
 document.getElementsByTagName('head')[0].appendChild(script);
 var warningText = "OPREZ! ISKLJUČENA VAM JE OBRANA!";
-var attackInstructions = "Upute: Dok obrana nije aktivna, mogu se slati razne naredbe uz pomoć <script> taga koje iskorištavaju slabosti ove stranice"
-+". Neke od naredbi za iskorištavanje slabosti:";
+var attackInstructions = "Upute: Nakon unosa korisničkih podataka u input-ove, podaci se pohranjuju u local storage. U slučaju kada obrana nije aktivna,"
++ "podaci se predaju u originalnom obliku (čisti tekst), a kada je obrana aktivna, lozinka se kriptira.";
 
 document.cookie = "COOKIE";
 
@@ -30,12 +30,17 @@ function submitData() {
     var shouldDefend = $('.defence-bool').val();
 
     console.log("USERNAME: " + userName);
-    console.log("Password: "+ password);
+    console.log(password);
 
     if (shouldDefend === "true") {
-        password = sha256(password);
+        sha256(password).then(hashedPassword => {
+            userObject = { userName: userName, password: hashedPassword };
+            localStorage.setItem("userData", JSON.stringify(userObject));
+        });
+    } else {
+        userObject = { userName: userName, password: password };
+        localStorage.setItem("userData", JSON.stringify(userObject));
     }
-    userObject = {userName: userName, password: password}
     localStorage.setItem("userData", JSON.stringify(userObject));
 }
 
