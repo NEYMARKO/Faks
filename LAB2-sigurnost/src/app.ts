@@ -15,6 +15,15 @@ app.get('/', function (req, res) {
   res.render('index');
 });
 
+// Define the route for the XSS page
+app.get('/xss', function (req, res) {
+  res.render('xss'); // Assuming 'xss.ejs' is your XSS page
+});
+
+// Define the route for the Sensitive Data page
+app.get('/sensitive-data', function (req, res) {
+  res.render('sensitiveData'); // Assuming 'sensitiveData.ejs' is your Sensitive Data page
+});
 //https://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript
 function filterInput(name: string): string {
   const map = {

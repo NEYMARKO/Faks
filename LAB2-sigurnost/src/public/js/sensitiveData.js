@@ -5,7 +5,6 @@ var warningText = "OPREZ! ISKLJUČENA VAM JE OBRANA!";
 var attackInstructions = "Upute: Dok obrana nije aktivna, mogu se slati razne naredbe uz pomoć <script> taga koje iskorištavaju slabosti ove stranice"
 +". Neke od naredbi za iskorištavanje slabosti:";
 
-var attackExamples = ["<script>alert('XSS attack')</script>", "<script>window.location.href = 'https://google.com'</script>", "<script>alert('XSS attack')</script>"];
 document.cookie = "COOKIE";
 
 
@@ -54,17 +53,9 @@ function handleDefence() {
 $(document).ready(function () {
     var defenceStatus = $('.defence-status');
     var defenceBoolForBack = $('.defence-bool');
-    var attackList = $('.attack-types');
 
     defenceStatus.text("Uključena");
     defenceStatus.css('color', 'green');
     defenceBoolForBack.val("true");
     
-    for (attack in attackExamples) {
-        var li = document.createElement("li");
-        li.appendChild(document.createTextNode(attackExamples[attack]));
-        attackList.append(li);
-    };
-    attackList.css('display', 'none');
-
 });

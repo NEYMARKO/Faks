@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/template.css">
+    <script type="text/javascript" src="/js/sensitiveData.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="shadow p-3 mb-5 bg-white rounded" style="width: 100%; width: 100%;">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">
+                        <div class="attack-title">
+                            <h1>Sensitive Data Exposure ranjivost</h1>
+                        </div>
+                    </div>
+                    <div class="attack-instructions">
+                        <p class="instructions" style = "color: red; font-weight: 700;"></p>
+                        <p class="attack-instructions-text"></p>
+                        <ul class="attack-types"></ul>
+                    </div>
+                    <div class="attack-content">
+                        <div class="action-container">
+                            Obrana: <p class="defence-status">Uključena</p>
+                        </div>
+                        <div class="form-check">
+                            <input class="xss-checkbox" type="checkbox" onclick="handleDefence()" checked>
+                        </div>
+                    </div>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Korisničko ime" required>
+                            <input type="password" class="form-control" id = "password" name="password" placeholder="Lozinka" required>
+                            <button class="btn btn-success" onclick="handleDefence()">Spremi podatke</button>
+                            <input type="hidden" class="defence-bool" name="defenceBool" value="true">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
