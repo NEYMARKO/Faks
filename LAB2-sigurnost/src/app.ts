@@ -3,7 +3,6 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 
-
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -12,6 +11,22 @@ app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+
+//https://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript
+function filterInput(name: string): string {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    "/": '&#x2F;',
+    "`": '&grave;'
+  };
+  const reg = /[&<>"'/`]/ig;
+  return name.replace(reg, (match) => (map[match as keyof typeof map]));
+}
 
 app.get('/', function (req, res) {
   res.render('index');
@@ -32,30 +47,14 @@ app.post('/sensitive-data/submit', async function(req, res) {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
       res.json({ userName, password: hashedPassword });
-      // Continue with success logic
     } catch (error : any) {
       console.error('Error hashing password:', error.message);
-      // Handle the error
     }
   }
   else{
     res.json({ userName, password: password });
   }
 });
-//https://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript
-function filterInput(name: string): string {
-  const map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#x27;',
-    "/": '&#x2F;',
-    "`": '&grave;'
-  };
-  const reg = /[&<>"'/`]/ig;
-  return name.replace(reg, (match) => (map[match as keyof typeof map]));
-}
 
 app.route('/submit')
   .get((req, res) => {
