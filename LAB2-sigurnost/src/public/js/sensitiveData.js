@@ -3,7 +3,8 @@ script.src = 'https://code.jquery.com/jquery-3.6.3.min.js';
 document.getElementsByTagName('head')[0].appendChild(script);
 var warningText = "OPREZ! ISKLJUČENA VAM JE OBRANA!";
 var attackInstructions = "Upute: Nakon unosa korisničkih podataka u input-ove, podaci se pohranjuju u local storage. U slučaju kada obrana nije aktivna,"
-    + "podaci se predaju u originalnom obliku (čisti tekst), a kada je obrana aktivna, lozinka se kriptira.";
+    + " podaci se predaju u originalnom obliku (čisti tekst), a kada je obrana aktivna, lozinka se kriptira. Ukoliko se obrana isključi/uključi potrebno je"
+    + " ponovno kliknuti na gumb za spremanje podataka, prije prikaza pohranjenih podataka kako bi promjene bile vidljive.";
 
 document.cookie = "COOKIE";
 
@@ -48,24 +49,19 @@ function getData() {
 }
 function disableVisibility() {
     var instructionsParagraph = $('.instructions');
-    var attackInstructionsElement = $('.attack-instructions-text');
     var attackList = $('.attack-types');
 
     instructionsParagraph.css('display', 'none');
-    attackInstructionsElement.css('display', 'none');
     attackList.css('display', 'none');
 }
 
 function enableVisibility() {
     var instructionsParagraph = $('.instructions');
-    var attackInstructionsElement = $('.attack-instructions-text');
     var attackList = $('.attack-types');
 
     instructionsParagraph.text(warningText);
     instructionsParagraph.css('display', 'inline-block');
 
-    attackInstructionsElement.css('display', 'inline-block');
-    attackInstructionsElement.text(attackInstructions);
 
     attackList.css('display', 'inline-block');
 }
@@ -91,7 +87,9 @@ function handleDefence() {
 $(document).ready(function () {
     var defenceStatus = $('.defence-status');
     var defenceBoolForBack = $('.defence-bool');
-
+    var attackInstructionsElement = $('.attack-instructions-text');
+    attackInstructionsElement.css('display', 'inline-block');
+    attackInstructionsElement.text(attackInstructions);
     defenceStatus.text("Uključena");
     defenceStatus.css('color', 'green');
     defenceBoolForBack.val("true");
