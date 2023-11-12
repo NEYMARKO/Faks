@@ -1,9 +1,16 @@
 import express from 'express';
+import fs from 'fs';
+import https from 'https';
 import path from 'path';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+dotenv.config()
 
 const app = express();
+
+const externalUrl = process.env.RENDER_EXTERNAL_URL;
+const port = externalUrl && process.env.PORT ? parseInt(process.env.PORT) : 4080;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set("views", path.join(__dirname, "views"));
@@ -33,25 +40,25 @@ app.get('/', function (req, res) {
 });
 
 app.get('/xss', function (req, res) {
-  res.render('xss'); 
+  res.render('xss');
 });
 
 app.get('/sensitive-data', function (req, res) {
   res.render('sensitiveData');
 });
 
-app.post('/sensitive-data/submit', async function(req, res) {
+app.post('/sensitive-data/submit', async function (req, res) {
   const { userName, password, shouldEncrypt } = req.body;
 
   if (shouldEncrypt) {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
       res.json({ userName, password: hashedPassword });
-    } catch (error : any) {
+    } catch (error: any) {
       console.error('Error hashing password:', error.message);
     }
   }
-  else{
+  else {
     res.json({ userName, password: password });
   }
 });
@@ -81,8 +88,19 @@ app.route('/submit')
     res.send(`<h1>Bok ${name}!</h1>`);
   });
 
-const hostname = '127.0.0.1';
-const port = 4072;
-app.listen(port, hostname, () => {
-  console.log(`SPA hosted at http://${hostname}:${port}/`);
-});
+if (externalUrl) {
+  const hostname = '0.0.0.0'; //ne 127.0.0.1
+  app.listen(port, hostname, () => {
+    console.log(`Server locally running at http://${hostname}:${port}/ and from
+    outside on ${externalUrl}`);
+  });
+}
+else {
+  https.createServer({
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.cert')
+  }, app)
+    .listen(port, function () {
+      console.log(`Server running at https://localhost:${port}/`);
+    });
+}
