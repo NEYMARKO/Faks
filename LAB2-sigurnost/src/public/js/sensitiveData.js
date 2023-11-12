@@ -8,6 +8,44 @@ var attackInstructions = "Upute: Dok obrana nije aktivna, mogu se slati razne na
 document.cookie = "COOKIE";
 
 
+
+async function sha256(message) {
+    // encode as UTF-8
+    const msgBuffer = new TextEncoder().encode(message);                    
+
+    // hash the message
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+    // convert ArrayBuffer to Array
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+    // convert bytes to hex string                  
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
+
+function submitData() {
+    var userName = $('#userName').val();
+    var password = $('#password').val();
+    var shouldDefend = $('.defence-bool').val();
+
+    console.log("USERNAME: " + userName);
+    console.log("Password: "+ password);
+
+    if (shouldDefend === "true") {
+        password = sha256(password);
+    }
+    userObject = {userName: userName, password: password}
+    localStorage.setItem("userData", JSON.stringify(userObject));
+}
+
+function getData() {
+    var userInfoDiv = $('.user-info');
+    var userObject = JSON.parse(localStorage.getItem('userData'));
+    var userName = userObject.userName;
+    var password = userObject.password;
+    userInfoDiv.text(`Korisničko ime: ${userName} Lozinka: ${password}`);
+}
 function disableVisibility() {
     var instructionsParagraph = $('.instructions');
     var attackInstructionsElement = $('.attack-instructions-text');
