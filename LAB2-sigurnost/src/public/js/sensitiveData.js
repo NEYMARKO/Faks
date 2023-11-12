@@ -3,45 +3,40 @@ script.src = 'https://code.jquery.com/jquery-3.6.3.min.js';
 document.getElementsByTagName('head')[0].appendChild(script);
 var warningText = "OPREZ! ISKLJUČENA VAM JE OBRANA!";
 var attackInstructions = "Upute: Nakon unosa korisničkih podataka u input-ove, podaci se pohranjuju u local storage. U slučaju kada obrana nije aktivna,"
-+ "podaci se predaju u originalnom obliku (čisti tekst), a kada je obrana aktivna, lozinka se kriptira.";
+    + "podaci se predaju u originalnom obliku (čisti tekst), a kada je obrana aktivna, lozinka se kriptira.";
 
 document.cookie = "COOKIE";
-
-
-
-async function sha256(message) {
-    // encode as UTF-8
-    const msgBuffer = new TextEncoder().encode(message);                    
-
-    // hash the message
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-
-    // convert ArrayBuffer to Array
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-
-    // convert bytes to hex string                  
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    return hashHex;
-}
 
 function submitData() {
     var userName = $('#userName').val();
     var password = $('#password').val();
     var shouldDefend = $('.defence-bool').val();
+    var data = {};
 
     console.log("USERNAME: " + userName);
-    console.log(password);
+    console.log("password: " + password);
+    console.log("shouldDefend: " + shouldDefend);
 
     if (shouldDefend === "true") {
-        sha256(password).then(hashedPassword => {
-            userObject = { userName: userName, password: hashedPassword };
-            localStorage.setItem("userData", JSON.stringify(userObject));
-        });
+        data = { userName: userName, password: password, shouldEncrypt: true };
     } else {
-        userObject = { userName: userName, password: password };
-        localStorage.setItem("userData", JSON.stringify(userObject));
+        data = { userName: userName, password: password, shouldEncrypt: false };
     }
-    localStorage.setItem("userData", JSON.stringify(userObject));
+
+    $.ajax({
+        url: '/sensitive-data/submit',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function (response) {
+            console.log('Success:');
+            var userObject = {userName: response.userName, password: response.password};
+            localStorage.setItem("userData", JSON.stringify(userObject));
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
 }
 
 function getData() {
@@ -68,7 +63,7 @@ function enableVisibility() {
 
     instructionsParagraph.text(warningText);
     instructionsParagraph.css('display', 'inline-block');
-    
+
     attackInstructionsElement.css('display', 'inline-block');
     attackInstructionsElement.text(attackInstructions);
 
@@ -100,5 +95,5 @@ $(document).ready(function () {
     defenceStatus.text("Uključena");
     defenceStatus.css('color', 'green');
     defenceBoolForBack.val("true");
-    
+
 });

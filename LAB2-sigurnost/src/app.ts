@@ -1,6 +1,8 @@
 import express from 'express';
 import path from 'path';
-import bodyParser from 'body-parser'; // Import body-parser
+import bodyParser from 'body-parser';
+import bcrypt from 'bcrypt';
+
 
 const app = express();
 
@@ -15,14 +17,30 @@ app.get('/', function (req, res) {
   res.render('index');
 });
 
-// Define the route for the XSS page
 app.get('/xss', function (req, res) {
-  res.render('xss'); // Assuming 'xss.ejs' is your XSS page
+  res.render('xss'); 
 });
 
-// Define the route for the Sensitive Data page
 app.get('/sensitive-data', function (req, res) {
-  res.render('sensitiveData'); // Assuming 'sensitiveData.ejs' is your Sensitive Data page
+  res.render('sensitiveData');
+});
+
+app.post('/sensitive-data/submit', async function(req, res) {
+  const { userName, password, shouldEncrypt } = req.body;
+
+  if (shouldEncrypt) {
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      res.json({ userName, password: hashedPassword });
+      // Continue with success logic
+    } catch (error : any) {
+      console.error('Error hashing password:', error.message);
+      // Handle the error
+    }
+  }
+  else{
+    res.json({ userName, password: password });
+  }
 });
 //https://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript
 function filterInput(name: string): string {
@@ -49,7 +67,7 @@ app.route('/submit')
       name = filterInput(name);
       console.log("Filtered name: " + name);
     }
-    res.type('text/html').send(`<h1>Hello ${name}!</h1>`);
+    res.type('text/html').send(`<h1>Bok ${name}!</h1>`);
   })
   .post((req, res) => {
 
@@ -61,7 +79,7 @@ app.route('/submit')
       console.log("Filtered name: " + name);
     }
 
-    res.send(`<h1>Hello ${name}!</h1>`);
+    res.send(`<h1>Bok ${name}!</h1>`);
   });
 
 const hostname = '127.0.0.1';
