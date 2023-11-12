@@ -6,7 +6,6 @@ var attackInstructions = "Upute: Dok obrana nije aktivna, mogu se slati razne na
 +". Neke od naredbi za iskorištavanje slabosti:";
 
 var attackExamples = ["<script>alert('XSS attack')</script>", "<script>window.location.href = 'https://google.com'</script>", "<script>alert(document.cookie)</script>"];
-document.cookie = "COOKIE";
 
 
 function disableVisibility() {
