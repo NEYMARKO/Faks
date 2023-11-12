@@ -2,9 +2,11 @@ var script = document.createElement('script');
 script.src = 'https://code.jquery.com/jquery-3.6.3.min.js';
 document.getElementsByTagName('head')[0].appendChild(script);
 var warningText = "OPREZ! ISKLJUČENA VAM JE OBRANA!";
-var attackInstructions = "Upute: Nakon unosa korisničkih podataka u input-ove, podaci se pohranjuju u local storage. U slučaju kada obrana nije aktivna,"
-    + " podaci se predaju u originalnom obliku (čisti tekst), a kada je obrana aktivna, lozinka se kriptira. Ukoliko se obrana isključi/uključi potrebno je"
-    + " ponovno kliknuti na gumb za spremanje podataka, prije prikaza pohranjenih podataka kako bi promjene bile vidljive.";
+var attackInstructions = "Upute: Nakon unosa korisničkih podataka u input-ove potrebno je kliknuti na gumb 'Spremi podatke'"
++ "da bi se podaci pohranili u local storage. Uz pomoć gumba 'Pokaži pohranjene podatke' se prikazuju podaci koji su se spremili u local storage. "
++ "U slučaju kada obrana nije aktivna, podaci se predaju u originalnom obliku (čisti tekst), a kada je obrana aktivna, lozinka se kriptira. "
++ "Ukoliko se promijeni status obrane (isključi/uključi) potrebno je"
+    + " ponovno kliknuti na gumb za spremanje podataka, prije klika na gumb 'Pokaži pohranjene podatke', kako bi promjene bile vidljive.";
 
 document.cookie = "COOKIE";
 
