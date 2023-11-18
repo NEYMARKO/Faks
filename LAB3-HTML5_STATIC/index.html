@@ -55,23 +55,31 @@
             },
             stop: function () {
                 clearInterval(this.interval);
+                let finalScore = gameEnd - gameStart;
+                let highScore =  parseFloat(localStorage.getItem("highscore")) || 0;
+
+                //console.log("FINAL SCORE: ", finalScore);
+                //console.log("HIGHSCORE: ", highScore);
+                if (finalScore > highScore) 
+                {
+                    localStorage.setItem("highscore", finalScore);
+                }
             },
             clear: function () {
                 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             },
-            
-            showScore: function () 
-            {
+
+            showScore: function () {
                 this.context.font = "25px Arial";
                 this.context.fillStyle = "#0000000";
-                this.context.fillText("Najbolje vrijeme: " + (localStorage.getItem("highscore") | "00:00:00"), canvasWidth - 0.25*canvasWidth, canvasHeight - (canvasHeight - 20));
-                this.context.fillText("Vrijeme: " + getCurrentTimeScore(), canvasWidth - 0.25*canvasWidth, canvasHeight - (canvasHeight - 50));
+                this.context.fillText("Najbolje vrijeme: " + (formatScore(parseFloat(localStorage.getItem("highscore"))) || "00:00.00"), canvasWidth - 0.25 * canvasWidth, canvasHeight - (canvasHeight - 20));
+                this.context.fillText("Vrijeme: " + getCurrentTimeScore(), canvasWidth - 0.25 * canvasWidth, canvasHeight - (canvasHeight - 50));
             }
 
         }
 
-        function getCurrentTimeScore () 
-        {
+        //https://stackoverflow.com/questions/33458174/get-current-datetime-in-minutes-and-convert-datetime-d-m-y-hm-to-minutes-java
+        function getCurrentTimeScore() {
             let currentTime = new Date().getTime() - gameStart;
             //console.log("CURRENT TIME: " + currentTime);
             let minutes = Math.floor(currentTime / (1000 * 60));
@@ -80,6 +88,19 @@
             let seconds = Math.floor(currentTime / 1000);
             currentTime -= seconds * 1000;
             let miliseconds = currentTime;
+
+            return `${minutes}:${seconds}.${miliseconds}`;
+        }
+
+        function formatScore(timeScore)
+        {
+            //console.log("CURRENT TIME: " + currentTime);
+            let minutes = Math.floor(timeScore / (1000 * 60));
+            //console.log("MINUTES: ",minutes);
+            timeScore -= minutes * 1000 * 60;
+            let seconds = Math.floor(timeScore / 1000);
+            timeScore -= seconds * 1000;
+            let miliseconds = timeScore;
 
             return `${minutes}:${seconds}.${miliseconds}`;
         }
@@ -218,11 +239,10 @@
                 currentAsteroid = spawnedAsteroids[asteroidPos];
                 currentAsteroid.moveAsteroid();
                 currentAsteroid.update();
-                if(checkColission(currentAsteroid))
-                {
+                if (checkColission(currentAsteroid)) {
+                    gameEnd = new Date().getTime();
                     myGameArea.stop();
-                    gameEnd = Date.now();
-                    console.log("DURATION: ", gameEnd - gameStart);
+                    //console.log("DURATION: ", gameEnd - gameStart);
                 }
                 currentAsteroid.checkAsteroidCanvas(asteroidPos);
             }
