@@ -37,10 +37,17 @@
             //https://css-tricks.com/snippets/javascript/random-hex-color/
             //generiranje random boje
             for (let i = 0; i < spawnAmount; i++) {
-                spawnedAsteroids.push(new component(40, 40, "#" + Math.floor(Math.random() * 16777215).toString(16), canvasWidth, canvasHeight, "asteroid"));
+                spawnedAsteroids.push(new component(40, 40, generateGrayColor(), canvasWidth, canvasHeight, "asteroid"));
             }
             gameStart = new Date().getTime();
             myGameArea.start();
+        }
+
+        //https://stackoverflow.com/questions/22692588/random-hex-generator-only-grey-colors
+        function generateGrayColor() {
+            var value = Math.random() * 0xFF | 0;
+            var grayscale = (value << 16) | (value << 8) | value;
+            return '#' + grayscale.toString(16);
         }
         var myGameArea = {
             canvas: document.createElement("canvas"),
@@ -56,12 +63,11 @@
             stop: function () {
                 clearInterval(this.interval);
                 let finalScore = gameEnd - gameStart;
-                let highScore =  parseFloat(localStorage.getItem("highscore")) || 0;
+                let highScore = parseFloat(localStorage.getItem("highscore")) || 0;
 
                 //console.log("FINAL SCORE: ", finalScore);
                 //console.log("HIGHSCORE: ", highScore);
-                if (finalScore > highScore) 
-                {
+                if (finalScore > highScore) {
                     localStorage.setItem("highscore", finalScore);
                 }
             },
@@ -92,8 +98,7 @@
             return `${minutes}:${seconds}.${miliseconds}`;
         }
 
-        function formatScore(timeScore)
-        {
+        function formatScore(timeScore) {
             //console.log("CURRENT TIME: " + currentTime);
             let minutes = Math.floor(timeScore / (1000 * 60));
             //console.log("MINUTES: ",minutes);
@@ -215,7 +220,7 @@
             let activeAsteroids = spawnedAsteroids.length;
             if (activeAsteroids < minimalAsteroidCount) {
                 for (let i = 0; i < spawnAmount - activeAsteroids; i++) {
-                    spawnedAsteroids.push(new component(40, 40, "#" + Math.floor(Math.random() * 16777215).toString(16), canvasWidth, canvasHeight, "asteroid"));
+                    spawnedAsteroids.push(new component(40, 40, generateGrayColor(), canvasWidth, canvasHeight, "asteroid"));
                 }
             }
         }
