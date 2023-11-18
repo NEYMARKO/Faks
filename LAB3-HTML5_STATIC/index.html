@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>LABOS 3 - HTML5</title>
     <style>
         canvas {
-            border:1px solid #000000;
+            border: 1px solid #000000;
             background-color: #FFFFFFFF;
         }
     </style>
@@ -21,8 +22,8 @@
             myGameArea.start();
         }
         var myGameArea = {
-            canvas : document.createElement("canvas"),
-            start : function() {
+            canvas: document.createElement("canvas"),
+            start: function () {
                 this.canvas.id = "myGameCanvas";
                 this.canvas.width = canvasWidth * 0.99;
                 this.canvas.height = canvasHeight * 0.975;
@@ -31,10 +32,10 @@
                 this.frameNo = 0;
                 this.interval = setInterval(updateGameArea, 20);
             },
-            stop : function() {
+            stop: function () {
                 clearInterval(this.interval);
             },
-            clear : function() {
+            clear: function () {
                 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             },
 
@@ -43,12 +44,12 @@
             this.type = type;
             this.width = width;
             this.height = height;
-            this.speed_x = 2;
-            this.speed_y = 2; 
+            this.speed_x = 15;
+            this.speed_y = 15;
             this.x = x;
             this.y = y;
 
-            this.update = function() {
+            this.update = function () {
                 ctx = myGameArea.context;
                 ctx.save();
                 ctx.translate(this.x, this.y);
@@ -56,26 +57,63 @@
                 ctx.fillRect(this.width / -2, this.height / -2, this.width, this.height);
                 ctx.restore();
             }
-            this.newPos = function() {
-                if (this.x - this.width / 2 < 0)
-                    this.speed_x = 2;
-                else if ((this.x + this.width / 2) >= myGameArea.context.canvas.width)
-                    this.speed_x = -2;
-                if (this.y - this.height / 2 < 0)
-                    this.speed_y = -2;
-                else if ((this.y + this.height / 2) >= myGameArea.context.canvas.height)
-                    this.speed_y = 2;
-                this.x += this.speed_x;
-                this.y -= this.speed_y;
+            this.newPos = function (direction_x, direction_y) {
+                //console.log("START X: ", this.x);
+                this.x += direction_x * this.speed_x;
+                this.y += direction_y * this.speed_y;
+                
+                //horizontalni teleport
+                if (this.x + this.width >= canvasWidth && direction_x === 1) 
+                {
+                    this.x = 0;
+                }
+                else if (this.x < 0) 
+                {
+                    //console.log("THIS.X: ", this.x);
+                    this.x = canvasWidth;
+                    //console.log("CANVAS WIDTH: ", canvasWidth);
+                }
+                //vertikalni teleport
+
+                if(this.y + this.height <= 0 && direction_y === -1) 
+                {
+                    this.y = canvasHeight;
+                }
+                else if(this.y > canvasHeight) 
+                {
+                    this.y = 0;
+                }
             }
         }
 
+        window.addEventListener('keydown', function (event) {
+            const pressedKey = event.keyCode;
+            if (pressedKey === 37)
+            {
+                player.newPos(-1, 0); //Left key
+            }
+            if (pressedKey === 38)
+            {
+                player.newPos(0, -1); //Up key
+            }
+            if (pressedKey === 39)
+            {
+                player.newPos(1, 0); //Right key
+            }
+            if (pressedKey === 40)
+            {
+                player.newPos(0, 1); //Down key
+            }
+            updateGameArea();
+        });
         function updateGameArea() {
             myGameArea.clear();
             player.update();
         }
     </script>
 </head>
+
 <body onload="startGame()">
 </body>
+
 </html>
