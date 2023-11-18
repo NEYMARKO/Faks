@@ -23,8 +23,9 @@
         let spawnAmount = 15;
         //najmanji broj vidljivih asteroida - ukoliko ih je manje od toga, trebaju se spawnati novi
         let minimalAsteroidCount = 7;
-
         let maxAsteroidSpeed = 10;
+        let currentAsteroid = null;
+
         function startGame() {
             let centerWidth = canvasWidth / 2;
             let centerHeight = canvasHeight / 2;
@@ -152,6 +153,15 @@
                 this.x += this.speed_x;
                 this.y += this.speed_y;
             }
+
+            //provjerava je li asteroid vidljiv u canvasu, ako nije, brise se
+            this.checkAsteroidCanvas = function(position)
+            {
+                if (this.x + this.width < 0 || this.x > canvasWidth || this.y < 0 || this.y > canvasHeight)
+                {
+                    spawnedAsteroids.splice(position, 1);
+                }
+            }
         }
 
         window.addEventListener('keydown', function (event) {
@@ -165,14 +175,29 @@
             updateGameArea();
         });
 
+        function handleAsteroidCount()
+        {
+            let activeAsteroids = spawnedAsteroids.length;
+            if (activeAsteroids < minimalAsteroidCount)
+            {
+                for (let i = 0; i < spawnAmount - activeAsteroids; i++)
+                {
+                    spawnedAsteroids.push(new component(40, 40, "#" + Math.floor(Math.random() * 16777215).toString(16), canvasWidth, canvasHeight, "asteroid"));
+                }
+            }
+        }
+
         function updateGameArea() {
             myGameArea.clear();
             player.movePlayer();
             player.update();
-            for (let asteroid in spawnedAsteroids) {
-                spawnedAsteroids[asteroid].moveAsteroid();
-                spawnedAsteroids[asteroid].update();
+            for (let asteroidPos in spawnedAsteroids) {
+                currentAsteroid = spawnedAsteroids[asteroidPos];
+                currentAsteroid.moveAsteroid();
+                currentAsteroid.checkAsteroidCanvas(asteroidPos);
+                currentAsteroid.update();
             }
+            handleAsteroidCount();
         }
     </script>
 </head>
