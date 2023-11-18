@@ -27,6 +27,9 @@
         let maxAsteroidSpeed = 10;
         let currentAsteroid = null;
 
+        let gameStart = null;
+        let gameEnd = null;
+
         function startGame() {
             let centerWidth = canvasWidth / 2;
             let centerHeight = canvasHeight / 2;
@@ -36,6 +39,7 @@
             for (let i = 0; i < spawnAmount; i++) {
                 spawnedAsteroids.push(new component(40, 40, "#" + Math.floor(Math.random() * 16777215).toString(16), canvasWidth, canvasHeight, "asteroid"));
             }
+            gameStart = new Date().getTime();
             myGameArea.start();
         }
         var myGameArea = {
@@ -55,7 +59,29 @@
             clear: function () {
                 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             },
+            
+            showScore: function () 
+            {
+                this.context.font = "25px Arial";
+                this.context.fillStyle = "#0000000";
+                this.context.fillText("Najbolje vrijeme: " + (localStorage.getItem("highscore") | "00:00:00"), canvasWidth - 0.25*canvasWidth, canvasHeight - (canvasHeight - 20));
+                this.context.fillText("Vrijeme: " + getCurrentTimeScore(), canvasWidth - 0.25*canvasWidth, canvasHeight - (canvasHeight - 50));
+            }
 
+        }
+
+        function getCurrentTimeScore () 
+        {
+            let currentTime = new Date().getTime() - gameStart;
+            //console.log("CURRENT TIME: " + currentTime);
+            let minutes = Math.floor(currentTime / (1000 * 60));
+            //console.log("MINUTES: ",minutes);
+            currentTime -= minutes * 1000 * 60;
+            let seconds = Math.floor(currentTime / 1000);
+            currentTime -= seconds * 1000;
+            let miliseconds = currentTime;
+
+            return `${minutes}:${seconds}.${miliseconds}`;
         }
         function component(width, height, color, x, y, type) {
             this.type = type;
@@ -92,7 +118,7 @@
             }
 
             //console.log(`lower border: ${this.lowerBorder}, upper border: ${this.upperBorder}`);
-            console.log("GENERATED OBJECT");
+            //console.log("GENERATED OBJECT");
             this.update = function () {
                 ctx = myGameArea.context;
                 ctx.save();
@@ -174,22 +200,30 @@
         }
 
         function checkColission(asteroid) {
+            //https://stackoverflow.com/questions/31022269/collision-detection-between-two-rectangles-in-java
             if (player.rightBorder >= asteroid.leftBorder &&
                 player.leftBorder <= asteroid.rightBorder &&
                 player.upperBorder >= asteroid.lowerBorder &&
                 player.lowerBorder <= asteroid.upperBorder) {
-                console.log("COLLISION");
+                return true;
             }
+            return false;
         }
         function updateGameArea() {
             myGameArea.clear();
+            myGameArea.showScore();
             player.movePlayer();
             player.update();
             for (let asteroidPos in spawnedAsteroids) {
                 currentAsteroid = spawnedAsteroids[asteroidPos];
                 currentAsteroid.moveAsteroid();
                 currentAsteroid.update();
-                checkColission(currentAsteroid);
+                if(checkColission(currentAsteroid))
+                {
+                    myGameArea.stop();
+                    gameEnd = Date.now();
+                    console.log("DURATION: ", gameEnd - gameStart);
+                }
                 currentAsteroid.checkAsteroidCanvas(asteroidPos);
             }
             handleAsteroidCount();
@@ -198,12 +232,10 @@
         window.addEventListener('keydown', function (event) {
             const key = event.keyCode;
             pressedKeys[key] = true;
-            updateGameArea();
         });
         window.addEventListener('keyup', function (event) {
             const key = event.keyCode;
             pressedKeys[key] = false;
-            updateGameArea();
         });
     </script>
 </head>
