@@ -11,6 +11,7 @@
     </style>
     <script>
         let player = null;
+
         let canvasHeight = window.innerHeight;
         let canvasWidth = window.innerWidth;
         //web stranica nemre registrirati vise keydownova ili keyupova odjednom pa se koristi ova struktura kako bi se 
@@ -20,9 +21,9 @@
 
         let spawnedAsteroids = [];
         //maksimalan broj asteroida koji trebaju biti aktivni u nekom trenutku;
-        let spawnAmount = 15;
+        let spawnAmount = 7;
         //najmanji broj vidljivih asteroida - ukoliko ih je manje od toga, trebaju se spawnati novi
-        let minimalAsteroidCount = 7;
+        let minimalAsteroidCount = 5;
         let maxAsteroidSpeed = 10;
         let currentAsteroid = null;
 
@@ -30,7 +31,6 @@
             let centerWidth = canvasWidth / 2;
             let centerHeight = canvasHeight / 2;
             player = new component(35, 35, "#FF0000", centerWidth, centerHeight, "player");
-
             //https://css-tricks.com/snippets/javascript/random-hex-color/
             //generiranje random boje
             for (let i = 0; i < spawnAmount; i++) {
@@ -62,40 +62,37 @@
             this.width = width;
             this.height = height;
 
-            if (type === "player") 
-            {
+            if (this.type === "player") {
                 this.speed_x = 5;
                 this.speed_y = 5;
                 this.x = x;
                 this.y = y;
             }
 
-            else
-            {
+            else {
                 //rezultat ovog izraza je brzina u rasponu [-maxAsteroidSpeed / 2, maxAsteroidSpeed / 2]
                 this.speed_x = Math.floor(Math.random() * maxAsteroidSpeed) - maxAsteroidSpeed / 2;
                 this.speed_y = Math.floor(Math.random() * maxAsteroidSpeed) - maxAsteroidSpeed / 2;
-                
+
                 //console.log(`SPEED: (${this.speed_x}, ${this.speed_y})`);
-                let spawnOffset = Math.random(300);
-                if (this.speed_x > 0) 
-                {
+                let spawnOffset = Math.random() * 20;
+                this.distanceTraveled = - spawnOffset;
+                if (this.speed_x > 0) {
                     this.x = 0 - spawnOffset;
                 }
-                else
-                {
+                else {
                     this.x = canvasWidth + spawnOffset;
                 }
-                if (this.speed_y > 0)
-                {
+                if (this.speed_y > 0) {
                     this.y = 0 - spawnOffset;
                 }
-                else 
-                {
+                else {
                     this.y = canvasHeight + spawnOffset;
                 }
             }
 
+            //console.log(`lower border: ${this.lowerBorder}, upper border: ${this.upperBorder}`);
+            console.log("GENERATED OBJECT");
             this.update = function () {
                 ctx = myGameArea.context;
                 ctx.save();
@@ -107,6 +104,11 @@
                 ctx.fillStyle = color;
                 ctx.fillRect(this.width / -2, this.height / -2, this.width, this.height);
                 ctx.restore();
+
+                this.leftBorder = this.x - this.width / 2;
+                this.rightBorder = this.x + this.width / 2;
+                this.lowerBorder = this.y - this.height / 2;
+                this.upperBorder = this.y + this.height / 2;
             }
             this.movePlayer = function () {
                 if (pressedKeys[37] == true) {
@@ -147,21 +149,50 @@
                     this.y = 0;
                 }
             }
-            this.moveAsteroid = function()
-            {
+            this.moveAsteroid = function () {
                 //console.log(`ASTEROID POSITION: (${this.x}, ${this.y})`);
                 this.x += this.speed_x;
                 this.y += this.speed_y;
+                this.distanceTraveled += Math.sqrt(Math.pow(this.x, 2), Math.pow(this.y, 2));
             }
 
             //provjerava je li asteroid vidljiv u canvasu, ako nije, brise se
-            this.checkAsteroidCanvas = function(position)
-            {
-                if (this.x + this.width < 0 || this.x > canvasWidth || this.y < 0 || this.y > canvasHeight)
-                {
+            this.checkAsteroidCanvas = function (position) {
+                if (this.distanceTraveled >= canvasWidth && (this.x < 0 || this.x > canvasWidth || this.y < 0 || this.y > canvasHeight)) {
                     spawnedAsteroids.splice(position, 1);
                 }
             }
+        }
+
+        function handleAsteroidCount() {
+            let activeAsteroids = spawnedAsteroids.length;
+            if (activeAsteroids < minimalAsteroidCount) {
+                for (let i = 0; i < spawnAmount - activeAsteroids; i++) {
+                    spawnedAsteroids.push(new component(40, 40, "#" + Math.floor(Math.random() * 16777215).toString(16), canvasWidth, canvasHeight, "asteroid"));
+                }
+            }
+        }
+
+        function checkColission(asteroid) {
+            if (player.rightBorder >= asteroid.leftBorder &&
+                player.leftBorder <= asteroid.rightBorder &&
+                player.upperBorder >= asteroid.lowerBorder &&
+                player.lowerBorder <= asteroid.upperBorder) {
+                console.log("COLLISION");
+            }
+        }
+        function updateGameArea() {
+            myGameArea.clear();
+            player.movePlayer();
+            player.update();
+            for (let asteroidPos in spawnedAsteroids) {
+                currentAsteroid = spawnedAsteroids[asteroidPos];
+                currentAsteroid.moveAsteroid();
+                currentAsteroid.update();
+                checkColission(currentAsteroid);
+                currentAsteroid.checkAsteroidCanvas(asteroidPos);
+            }
+            handleAsteroidCount();
         }
 
         window.addEventListener('keydown', function (event) {
@@ -174,31 +205,6 @@
             pressedKeys[key] = false;
             updateGameArea();
         });
-
-        function handleAsteroidCount()
-        {
-            let activeAsteroids = spawnedAsteroids.length;
-            if (activeAsteroids < minimalAsteroidCount)
-            {
-                for (let i = 0; i < spawnAmount - activeAsteroids; i++)
-                {
-                    spawnedAsteroids.push(new component(40, 40, "#" + Math.floor(Math.random() * 16777215).toString(16), canvasWidth, canvasHeight, "asteroid"));
-                }
-            }
-        }
-
-        function updateGameArea() {
-            myGameArea.clear();
-            player.movePlayer();
-            player.update();
-            for (let asteroidPos in spawnedAsteroids) {
-                currentAsteroid = spawnedAsteroids[asteroidPos];
-                currentAsteroid.moveAsteroid();
-                currentAsteroid.checkAsteroidCanvas(asteroidPos);
-                currentAsteroid.update();
-            }
-            handleAsteroidCount();
-        }
     </script>
 </head>
 
