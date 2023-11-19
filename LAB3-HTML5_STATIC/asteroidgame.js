@@ -11,7 +11,7 @@ let spawnedAsteroids = [];
 //maksimalan broj asteroida koji trebaju biti aktivni u nekom trenutku;
 let maxActiveAsteroids = 40;
 //najmanji broj vidljivih asteroida - ukoliko ih je manje od toga, trebaju se spawnati novi
-let minimalAsteroidCount = 25;
+let minimalAsteroidCount = 30;
 
 let maxAsteroidSpeed = 10;
 let currentAsteroid = null;
@@ -26,10 +26,10 @@ function startGame() {
     player = new component(35, 35, "#FF0000", centerWidth, centerHeight, "player");
     //https://css-tricks.com/snippets/javascript/random-hex-color/
     for (let i = 0; i < maxActiveAsteroids; i++) {
-        //stvaranje asteroida: velicine i sirine su [30, 60] te su obojani u neku nijansu sive boje
+        //stvaranje asteroida: velicine i širine su [30, 60] te su obojani u neku nijansu sive boje
         spawnedAsteroids.push(new component(Math.random() * 30 + 30, Math.random() * 30 + 30, generateGrayColor(), canvasWidth, canvasHeight, "asteroid"));
     }
-    //biljezenje pocetka igre
+    //bilježenje vremena početka igre
     gameStart = new Date().getTime();
     myGameArea.start();
 }
@@ -41,8 +41,11 @@ function generateGrayColor() {
     var grayscale = (value << 16) | (value << 8) | value;
     return '#' + grayscale.toString(16);
 }
+
 var myGameArea = {
     canvas: document.createElement("canvas"),
+
+    //postavljanje izgleda igre - preuzeto s prezentacija
     start: function () {
         this.canvas.id = "myGameCanvas";
         this.canvas.width = canvasWidth * 0.99;
@@ -52,15 +55,19 @@ var myGameArea = {
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
     },
+
+    //funkcija koja zaustavlja igru i uspoređuje trenutni i najbolji rezultat
     stop: function () {
         clearInterval(this.interval);
+
+        //dohvaćanje konačnog vremena te usporedba s onim vremenom koje je pohranjeno u localStorage (najbolje vrijeme)
         let finalScore = gameEnd - gameStart;
         let highScore = parseFloat(localStorage.getItem("highscore")) || 0;
 
         if (finalScore > highScore) {
             localStorage.setItem("highscore", finalScore);
         }
-
+        //div za prikaz opcije ponavljanja igre postaje vidljiv nakon što je igra završila
         document.querySelector('.restart-game').style.display = 'flex';
     },
     clear: function () {
@@ -88,6 +95,7 @@ function getCurrentTimeScore() {
     currentTime -= seconds * 1000;
     let miliseconds = currentTime;
 
+    //način formatiranja vremena da bude jednak traženom formatu vremena u zadatku
     if (minutes < 10)
     {
         minutes = `0${minutes}`;
@@ -99,7 +107,8 @@ function getCurrentTimeScore() {
     return `${minutes}:${seconds}.${miliseconds}`;
 }
 
-//funkcija za prikaz rezultata u trazenom formatu minutes:seconds.miliseconds (funkcija prima milisekunde te ih pretvara u minute, sekunde i milisekunde)
+//funkcija za prikaz rezultata u trazenom formatu minutes:seconds.miliseconds 
+//(funkcija prima milisekunde te ih pretvara u minute, sekunde i milisekunde)
 function formatScore(timeScore) {
 
     if (isNaN(timeScore))
@@ -112,6 +121,7 @@ function formatScore(timeScore) {
     timeScore -= seconds * 1000;
     let miliseconds = timeScore;
 
+    //način formatiranja vremena da bude jednak traženom formatu vremena u zadatku
     if (minutes < 10)
     {
         minutes = `0${minutes}`;
@@ -122,11 +132,14 @@ function formatScore(timeScore) {
     }
     return `${minutes}:${seconds}.${miliseconds}`;
 }
+
+//funkcija za stvaranje objekata tipa player i asteroid
 function component(width, height, color, x, y, type) {
     this.type = type;
     this.width = width;
     this.height = height;
 
+    //igrač ima konstantne brzine
     if (this.type === "player") {
         this.speed_x = 5;
         this.speed_y = 5;
@@ -139,7 +152,7 @@ function component(width, height, color, x, y, type) {
         this.speed_x = Math.floor(Math.random() * maxAsteroidSpeed) - maxAsteroidSpeed / 2;
         this.speed_y = Math.floor(Math.random() * maxAsteroidSpeed) - maxAsteroidSpeed / 2;
 
-        //odredivanje odmaka od canvasa na kojem ce se asteroid spawnati
+        //određivanje odmaka od canvasa na kojem će se asteroid spawnati
         let spawnOffset = Math.random() * 150 - 75;
         //distance traveled se počinje racunati tek nakon što asteroid uđe u canvas
         this.distanceTraveled = - spawnOffset;
@@ -210,6 +223,7 @@ function component(width, height, color, x, y, type) {
         else {
             direction_y = 0;
         }
+        //računanje pomaka u x i y smjeru
         this.x += direction_x * this.speed_x;
         this.y += direction_y * this.speed_y;
 
@@ -282,6 +296,7 @@ function updateGameArea() {
         currentAsteroid = spawnedAsteroids[asteroidPos];
         currentAsteroid.moveAsteroid();
         currentAsteroid.update();
+        //ukoliko je asteroid u koliziji s player-om, igra se završava
         if (checkColission(currentAsteroid)) {
             gameEnd = new Date().getTime();
             myGameArea.stop();
@@ -291,6 +306,9 @@ function updateGameArea() {
     handleAsteroidCount();
 }
 
+//funkcija za ponovno učitavanje igre - poziva se klikom na gumb .reset-button
+//briše sve asteroide iz liste, miče div za ponavljanje igre, čisti područje igre i postavlja početno
+//vrijeme na null te započinje novu igru
 function restartGame() 
 {
     gameStart = null;
