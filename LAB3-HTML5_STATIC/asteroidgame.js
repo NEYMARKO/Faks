@@ -16,6 +16,8 @@ let minimalAsteroidCount = 30;
 let maxAsteroidSpeed = 10;
 let currentAsteroid = null;
 
+let maxSpawnOffset = 150;
+
 let gameStart = null;
 let gameEnd = null;
 
@@ -78,8 +80,8 @@ var myGameArea = {
     showScore: function () {
         this.context.font = "25px Arial";
         this.context.fillStyle = "#0000000";
-        this.context.fillText("Najbolje vrijeme: " + (formatScore(parseFloat(localStorage.getItem("highscore")))), canvasWidth - 0.2 * canvasWidth, canvasHeight - (canvasHeight - 20));
-        this.context.fillText("Vrijeme: " + getCurrentTimeScore(), canvasWidth - 0.2 * canvasWidth, canvasHeight - (canvasHeight - 50));
+        this.context.fillText("Najbolje vrijeme: " + (formatScore(parseFloat(localStorage.getItem("highscore")))), canvasWidth - 0.25 * canvasWidth, canvasHeight - (canvasHeight - 20));
+        this.context.fillText("Vrijeme: " + getCurrentTimeScore(), canvasWidth - 0.25 * canvasWidth, canvasHeight - (canvasHeight - 50));
     }
 
 }
@@ -153,7 +155,8 @@ function component(width, height, color, x, y, type) {
         this.speed_y = Math.floor(Math.random() * maxAsteroidSpeed) - maxAsteroidSpeed / 2;
 
         //određivanje odmaka od canvasa na kojem će se asteroid spawnati
-        let spawnOffset = Math.random() * 150 - 75;
+        //ne mogu se spawnati na udaljenosti većoj od maxSpawnOffset/2 od ruba
+        let spawnOffset = Math.random() * maxSpawnOffset - maxSpawnOffset/2;
         //distance traveled se počinje racunati tek nakon što asteroid uđe u canvas
         this.distanceTraveled = - spawnOffset;
         //ukoliko se asteroid kreće desno, treba ga spawnati na: lijevoj strani canvasa - spawn offset 
@@ -254,7 +257,12 @@ function component(width, height, color, x, y, type) {
 
     //provjerava je li asteroid vidljiv u canvasu, ako nije, briše se
     this.checkAsteroidCanvas = function (position) {
-        if (this.distanceTraveled >= canvasWidth && (this.x < 0 || this.x > canvasWidth || this.y < 0 || this.y > canvasHeight)) {
+        //ukoliko asteroid još nije prošao cijelom duljinom canvasa (this.distanceTraveled >= maximumDistance nije zadovoljeno)
+        //ne smije ga se obrisat. Asteroid također treba biti izvan canvasa kako bi se mogao obrisat
+        //najdulji put koji objekt može proći se prelazi u slučaju da ide iz jednog kuta u drugi (po dijagonali)
+        //iz tog razloga mora proći po tom putu + maxSpawnOffset prije nego li ga se može obrisati (tada će sigurno proći kroz canvas)
+        let maximumDistance = Math.sqrt(Math.pow(canvasHeight, 2), Math.pow(canvasWidth, 2)) + maxSpawnOffset; 
+        if (this.distanceTraveled >= maximumDistance && (this.x < 0 || this.x > canvasWidth || this.y < 0 || this.y > canvasHeight)) {
             spawnedAsteroids.splice(position, 1);
         }
     }
@@ -299,10 +307,13 @@ function updateGameArea() {
         //ukoliko je asteroid u koliziji s player-om, igra se završava
         if (checkColission(currentAsteroid)) {
             gameEnd = new Date().getTime();
+            //zaustavljanje igre zbog kolizije
             myGameArea.stop();
         }
+        //provjera koliko ima vidljivih asteroida
         currentAsteroid.checkAsteroidCanvas(asteroidPos);
     }
+    //dodavanje novih asteroida ukoliko ih nema dovoljno u canvasu
     handleAsteroidCount();
 }
 
