@@ -45,11 +45,27 @@ package-lock.json
 *.crt
 *.key
 
+# LAB4-HTTP2/nginx-1.24.0/conf/*
+# !LAB4-HTTP2/nginx-1.24.0/conf/nginx.conf
+
+# LAB4-HTTP2/nginx-1.24.0/*
+# !LAB4-HTTP2/nginx-1.24.0/conf/nginx.conf
+# LAB4-HTTP2/nginx-1.24.0/*
+# !LAB4-HTTP2/nginx-1.24.0/conf
+# LAB4-HTTP2/nginx-1.24.0/conf/fastcgi.conf
+# LAB4-HTTP2/nginx-1.24.0/conf/fastcgi_params
+# LAB4-HTTP2/nginx-1.24.0/conf/koi-utf
+# LAB4-HTTP2/nginx-1.24.0/conf/koi-win
+# LAB4-HTTP2/nginx-1.24.0/conf/mime.types
+# LAB4-HTTP2/nginx-1.24.0/conf/scgi_params
+# LAB4-HTTP2/nginx-1.24.0/conf/uwsgi_params
+# LAB4-HTTP2/nginx-1.24.0/conf/win-utf
+
 conf/
+
+#conf/
 contrib/
 docs/
 logs/
 temp/
 nginx.exe
-
-!conf/nginx.conf
