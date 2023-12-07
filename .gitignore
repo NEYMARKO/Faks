@@ -41,3 +41,15 @@ dist
 # ignore yarn.lock
 yarn.lock
 package-lock.json
+
+*.crt
+*.key
+
+conf/
+contrib/
+docs/
+logs/
+temp/
+nginx.exe
+
+!conf/nginx.conf
