@@ -1,0 +1,35 @@
+{
+    "name": "PWA-LAB5-Project",
+    "short_name": "PWA",
+    "description": "Aplikacija za demonstraciju pete laboratorijske vjezbe iz kolegija Napredni razvoj programske potpore za web",
+    "display": "standalone",
+    "theme_color": "#DDE6ED",
+    "background_color": "#DDE6ED",
+    "start_url": "/index.html",
+    "scope": ".",
+    "orientation": "portrait-primary",
+    "dir": "ltr",
+    "lang": "en-US",
+    "icons": [
+        {
+            "src": "/images/samurai_image-64_x_64.png"
+            ,
+            "sizes": "64x64"
+            },
+            {
+            "src": "/images/samurai_image-128_x_128.png"
+            ,
+            "sizes": "128x128"
+            },
+            {
+            "src": "/images/samurai_image-256_x_256.png"
+            ,
+            "sizes": "256x256"
+            },
+            {
+            "src": "/images/samurai_image-512_x_512.png"
+            ,
+            "sizes": "512x512"
+            }
+    ]
+}
