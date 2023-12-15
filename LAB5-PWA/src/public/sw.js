@@ -3,7 +3,13 @@
 const cacheName = "cache2";
 
 const cacheFilesList = [
+    "/",
     "manifest.json",
+    "/images/samurai_image-64_x_64.png",
+    "/images/samurai_image-128_x_128.png",
+    "/images/samurai_image-256_x_256.png",
+    "/images/samurai_image-512_x_512.png",
+    "/images/samurai_image-1024_x_1024.png",
     "index.html",
     "about.html",
     "/css/shared.css"
@@ -37,14 +43,14 @@ self.addEventListener('activate', e =>
     )
 })
 
-// self.addEventListener('fetch', (e) =>
-// {
-//     console.log("Fetching");
-//     console.log(e.request.url);
-//     e.respondWith(
-//         caches.match(e.request).then((res) =>
-//         {
-//             return res || fetch(e.res);
-//         })
-//     )
-// })
+self.addEventListener('fetch', (e) =>
+{
+    console.log("Fetching");
+    console.log(e.request.url);
+    e.respondWith(
+        caches.match(e.request).then((res) =>
+        {
+            return res || fetch(e.res);
+        })
+    )
+})
