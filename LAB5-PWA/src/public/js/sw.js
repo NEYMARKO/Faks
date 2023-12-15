@@ -1,1 +1,0 @@
-//treba cacheati manifest.json

@@ -26,5 +26,14 @@
         </div>
     </div>
 </body>
+<script>
+    navigator.serviceWorker
+        .register("sw.js", { type: "module" })
+        .then((reg) => console.log("SW registered!", reg))
+        .catch((err) =>
+            console.error("Error registering service worker", err)
+        );
+
+</script>
 
 </html>
