@@ -22,11 +22,11 @@ self.addEventListener('install', e =>
         caches.open(cacheName).then((cache) =>
             {
                 return cache.addAll(cacheFilesList);
-            })
+            }).then(() => self.skipWaiting())
     )
 })
 
-self.addEventListener('activate', e =>
+self.addEventListener('activate', (e) =>
 {
     console.log("Service worker activated");
     e.waitUntil(
@@ -45,12 +45,16 @@ self.addEventListener('activate', e =>
 
 self.addEventListener('fetch', (e) =>
 {
-    console.log("Fetching");
-    console.log(e.request.url);
+    //console.log("Fetching");
+    //console.log(e.request.url);
     e.respondWith(
         caches.match(e.request).then((res) =>
         {
-            return res || fetch(e.res);
+            return res || fetch(e.request).catch(() => 
+            {
+                return caches.match('index.html');
+            });
         })
+        // fetch(e.request).catch(() => caches.match(e.request))
     )
 })
