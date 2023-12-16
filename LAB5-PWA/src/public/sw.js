@@ -1,6 +1,6 @@
 //treba cacheati manifest.json
 
-const cacheName = "cache2";
+const cacheName = "cache";
 
 const cacheFilesList = [
     "/",
@@ -11,6 +11,9 @@ const cacheFilesList = [
     "/images/samurai_image-512_x_512.png",
     "/images/samurai_image-1024_x_1024.png",
     "index.html",
+    "audioHandler.js",
+    "/quotes/quote1.mp3",
+    "/quotes/quote2.mp3",
     "about.html",
     "/css/shared.css"
 ];
