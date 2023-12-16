@@ -1,8 +1,8 @@
 
 const data = [
-  { "number": 1, "artist": "Uesugi Kenshin", "title": "Warrior quote", "album": "Samurai quotes" },
-  { "number": 2, "artist": "Ishida Mitsunari", "title": "Combat quote", "album": "Samurai quotes" },
-  { "number": 3, "artist": "Unknown samurai", "title": "Long quote", "album": "Samurai quotes" }
+  { "number": 1, "artist": "Uesugi Kenshin", "title": "Warrior", "album": "Samurai quotes" },
+  { "number": 2, "artist": "Ishida Mitsunari", "title": "Combat", "album": "Samurai quotes" },
+  { "number": 3, "artist": "Unknown samurai", "title": "Essence of samurai", "album": "Samurai quotes" }
 ];
 
 function handleSelectionChange(event) {
@@ -12,7 +12,7 @@ function handleSelectionChange(event) {
   if (selectedObject) {
     console.log(selectedObject);
 
-    updateAudioSource(selectedValue);
+    updateAudioSource(selectedObject);
 
     updateMediaSessionMetadata(selectedObject);
   } else {
@@ -20,11 +20,15 @@ function handleSelectionChange(event) {
   }
 }
 
-function updateAudioSource(selectedValue) {
-  audio = document.getElementById("samurai_audio_player");
-  source = document.getElementById("audio_source");
+function updateAudioSource(selectedObject) {
+  const audio = document.getElementById("samurai_audio_player");
+  let source = document.getElementById("audio_source");
+  let cardTitle = document.querySelector('.card-title');
+  let cardText = document.querySelector('.card-text');
 
-  source.src = `quotes/quote${selectedValue}.mp3`;
+  cardTitle.innerHTML = selectedObject.title;
+  cardText.innerHTML = selectedObject.artist;
+  source.src = `quotes/quote${selectedObject.number}.mp3`;
 
   audio.load();
 }
@@ -32,7 +36,7 @@ function updateAudioSource(selectedValue) {
 function updateMediaSessionMetadata(selectedObject) {
   if ('mediaSession' in navigator) {
     const player = document.querySelector('audio');
-    
+
     navigator.mediaSession.metadata = new MediaMetadata({
       title: selectedObject.title || "",
       artist: selectedObject.artist || "",

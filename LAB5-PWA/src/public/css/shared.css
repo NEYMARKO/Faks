@@ -48,6 +48,19 @@ html, body
 .explanation
 {
     font-size: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+.quotes-container
+{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 20px;
 }
 .card, .card-header, .card-body
 {
@@ -61,4 +74,34 @@ html, body
 .card-header, .card-body
 {
     width: 100%;
+}
+
+.card-body
+{
+    flex-direction: column;
+}
+
+/*stil dao chatgpt da rijesi*/
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f9fa; 
+    color: #495057;
+}
+
+select option {
+    font-size: 14px;
+    background-color: #f8f9fa; 
+    color: #495057;
+}
+
+select:focus,
+select:hover {
+    border-color: #6c757d;
+    background-color: #e2e6ea; 
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.25); /
 }

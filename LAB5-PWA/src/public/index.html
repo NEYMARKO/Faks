@@ -28,24 +28,32 @@
             <div class="explanation">
                 <h1 class="display-4">
                     Klikom na dropdown odabirete citat koji želite poslušati
+                    <br> (Media Session API)
                 </h1>
             </div>
-            <h5 >
-                Citati
-            </h5>
-            <div class="options">
-                <select class="form-select" aria-label="Default select example" onchange="handleSelectionChange(event)">
-                    <option value="1" selected>Citat 1</option>
-                    <option value="2">Citat 2</option>
-                    <option value="3">Citat 3</option>
-                  </select>
-                <button class="btn btn-success" type="button">Odaberi citat</button>
+            <div class="quotes-container">
+                <h5 >
+                    Citati
+                </h5>
+                <div class="options">
+                    <select class="form-select" aria-label="Default select example" onchange="handleSelectionChange(event)">
+                        <option value="1" selected>Citat 1</option>
+                        <option value="2">Citat 2</option>
+                        <option value="3">Citat 3</option>
+                      </select>
+                </div>
             </div>
             <div class="card">
                 <h5 class="card-header">
-                    Citat
+                    Samurajski citat
                 </h5>
                 <div class="card-body">
+                    <h5 class="card-title">
+                        Warrior
+                    </h5>
+                    <p class="card-text">
+                        Uesugi Kenshin
+                    </p>
                     <audio id="samurai_audio_player" controls>
                         <source src="/quotes/quote1.mp3" type="audio/mp3" id="audio_source">
                     </audio>

@@ -12,6 +12,7 @@ const cacheFilesList = [
     "audioHandler.js",
     "/quotes/quote1.mp3",
     "/quotes/quote2.mp3",
+    "/quotes/quote3.mp3",
     "quote.html",  
     "/css/shared.css",
     "/css/index.css"
