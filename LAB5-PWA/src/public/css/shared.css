@@ -4,11 +4,21 @@ html, body
     width: 100%;
     margin: 0;
 }
+
+.container
+{
+    height: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
 .navbar
 {
     margin: 0;
     padding: 20px;
-    height: 100%;
+    margin-bottom: 10px;
+    height: 10%;
+    width: 100%;
     display: flex;
     justify-content: space-evenly;
     background-color: #A9A9A9;
@@ -25,4 +35,30 @@ html, body
 .navbar a:hover
 {
     color: #3081D0;
+}
+
+.content
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.explanation
+{
+    font-size: 15px;
+}
+.card, .card-header, .card-body
+{
+    height: 30%;
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-header, .card-body
+{
+    width: 100%;
 }

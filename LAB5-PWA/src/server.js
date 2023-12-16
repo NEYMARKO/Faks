@@ -16,7 +16,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  });
+});
+
 
 if (externalUrl) {
     const hostname = '0.0.0.0'; //ne 127.0.0.1

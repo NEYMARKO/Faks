@@ -1,0 +1,7 @@
+.options
+{
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
