@@ -25,12 +25,14 @@ const cacheFilesList = [
     "/images/samurai_image-1024_x_1024.png",
     "index.html", 
     "audioHandler.js",
+    "quoteInfo.js",
     "/quotes/quote1.mp3",
     "/quotes/quote2.mp3",
     "/quotes/quote3.mp3",
     "quote.html",  
     "/css/shared.css",
-    "/css/index.css"
+    "/css/index.css",
+    "css/quote.css"
 ];
 
 self.addEventListener('install', e => 

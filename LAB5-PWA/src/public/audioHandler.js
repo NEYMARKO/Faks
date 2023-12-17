@@ -5,6 +5,13 @@ const data = [
   { "number": 3, "artist": "Unknown samurai", "title": "Essence of samurai", "album": "Samurai quotes" }
 ];
 
+window.onload = function()
+{
+  let object = data.find(obj => obj.number === 1);
+  updateAudioSource(object);
+  updateMediaSessionMetadata(object);
+}
+
 function handleSelectionChange(event) {
   let selectedValue = parseInt(event.target.value);
   let selectedObject = data.find(obj => obj.number === selectedValue);
@@ -15,9 +22,12 @@ function handleSelectionChange(event) {
     updateAudioSource(selectedObject);
 
     updateMediaSessionMetadata(selectedObject);
+    localStorage.setItem("value", selectedValue);
+
   } else {
     console.log("Object not found for the selected value");
   }
+
 }
 
 function updateAudioSource(selectedObject) {
