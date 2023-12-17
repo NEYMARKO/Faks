@@ -43,22 +43,22 @@ function updateMediaSessionMetadata(selectedObject) {
       album: selectedObject.album || "",
       artwork: [
         {
-          src: '/images/samurai_image-64_x_64.png',
+          src: `/images/samurai_${selectedObject.number}-64_x_64.png`,
           sizes: '64x64',
           type: 'image/png'
         },
         {
-          src: '/images/samurai_image-128_x_128.png',
+          src: `/images/samurai_${selectedObject.number}-128_x_128.png`,
           sizes: '128x128',
           type: 'image/png'
         },
         {
-          src: '/images/samurai_image-256_x_256.png',
+          src: `/images/samurai_${selectedObject.number}-256_x_256.png`,
           sizes: '256x256',
           type: 'image/png'
         },
         {
-          src: '/images/samurai_image-512_x_512.png',
+          src: `/images/samurai_${selectedObject.number}-512_x_512.png`,
           sizes: '512x512',
           type: 'image/png'
         }
